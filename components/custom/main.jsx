@@ -40,7 +40,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { PiUserCircleCheckBold } from "react-icons/pi";
+import { useToast } from "@/hooks/use-toast";
+import { ToastAction } from "@/components/ui/toast";
 
 const initialData = [
   {
@@ -58,6 +59,7 @@ export default function MainArea() {
   const [rowSelection, setRowSelection] = useState({});
   const [data, setData] = useState(initialData);
   const [products, setProducts] = useState([]);
+  const { toast } = useToast();
   const [product, setProduct] = useState({
     productName: "",
     stock: "",
@@ -200,16 +202,31 @@ export default function MainArea() {
     const token_id = localStorage.getItem("token_id");
 
     if (!product.productName || !product.stock || !product.price) {
-      alert("Please fill in all fields before adding the product.");
+      toast({
+        title: "Please fill in all fields before adding the product",
+        description: "Go to MERCHANDISE section to see products",
+        action: <ToastAction altText="Goto schedule to undo">OK</ToastAction>,
+      });
       return;
     }
+
     await fetch("/api/storeproduct", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ ...product, token_id }),
     });
-    alert("Product added");
-    setProduct({ productName: "", stock: "", amount: "" });
+
+    toast({
+      title: "Product Added Successfully",
+      description: "Go to MERCHANDISE section to see products",
+      action: <ToastAction altText="Goto schedule to undo">OK</ToastAction>,
+    });
+
+    // Reset the product state to clear the input fields
+    setProduct({ productName: "", stock: "", price: "" });
+
+    // Update data to trigger refresh
+    setData((prevData) => [...prevData, product]);
   };
 
   const totalCost = data.reduce((acc, product) => {
@@ -218,7 +235,10 @@ export default function MainArea() {
     return acc + amount * stock;
   }, 0);
 
-  const totalStock = data.reduce((acc, product) => acc + Number(product.stock), 0);
+  const totalStock = data.reduce(
+    (acc, product) => acc + Number(product.stock),
+    0
+  );
 
   const saveTotalCostAndStock = async (totalCost, totalStock) => {
     try {
@@ -242,9 +262,9 @@ export default function MainArea() {
   }, [data]);
 
   return (
-    <div className="w-[90%] m-auto">
+    <div className="w-[100%] m-auto">
       <Tabs defaultValue="stock" className="w-full mt-10">
-        <TabsList className="grid w-[70%] m-auto grid-cols-2 lg:w-[40%]">
+        <TabsList className="grid w-[100%] m-auto grid-cols-2 lg:w-[40%]">
           <TabsTrigger value="stock">MERCHANDISE</TabsTrigger>
           <TabsTrigger value="addproduct">ADD PRODUCT</TabsTrigger>
         </TabsList>
@@ -324,7 +344,7 @@ export default function MainArea() {
                         colSpan={columns.length}
                         className="h-24 text-center"
                       >
-                        <b> SINGUP </b> or <b> LOGIN </b> or{" "}
+                        <b> LOGIN </b> or <b> SIGNIN </b> or{" "}
                         <b> ADD PRODUCTS </b> TO SATRT USING
                       </TableCell>
                     </TableRow>
@@ -358,7 +378,7 @@ export default function MainArea() {
             </div>
           </div>
         </TabsContent>
-        <TabsContent value="addproduct" className="w-[50%] mx-auto mt-[5%]">
+        <TabsContent value="addproduct" className="w-[100%] mx-auto">
           <Card>
             <CardHeader>
               <CardTitle>ADD PRODUCT</CardTitle>
@@ -367,6 +387,7 @@ export default function MainArea() {
               <div className="space-y-2">
                 <Label htmlFor="productName">PRODUCT NAME</Label>
                 <Input
+                  value={product.productName}
                   onChange={(e) =>
                     setProduct({ ...product, productName: e.target.value })
                   }
@@ -375,6 +396,7 @@ export default function MainArea() {
               <div className="space-y-1">
                 <Label htmlFor="stock">PRODUCT STOCK</Label>
                 <Input
+                  value={product.stock}
                   onChange={(e) =>
                     setProduct({ ...product, stock: e.target.value })
                   }
@@ -383,6 +405,7 @@ export default function MainArea() {
               <div className="space-y-1">
                 <Label htmlFor="amount">PRODUCT PRICE</Label>
                 <Input
+                  value={product.price}
                   onChange={(e) =>
                     setProduct({ ...product, price: e.target.value })
                   }
@@ -395,11 +418,6 @@ export default function MainArea() {
           </Card>
         </TabsContent>
       </Tabs>
-      <div className="text-3xl fixed bottom-4 right-12 p-2 bg-gray-800 rounded-full text-white shadow-lg hover:bg-gray-700">
-        <a href="/pages/auth">
-          <PiUserCircleCheckBold />
-        </a>
-      </div>
     </div>
   );
 }

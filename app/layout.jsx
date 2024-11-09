@@ -7,6 +7,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body>
         <Header />
+        <hr className="my-8" />
         <main>{children}</main>
         <Toaster />
       </body>
