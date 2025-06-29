@@ -3,9 +3,9 @@ import { NextResponse } from "next/server";
 import { MongoClient } from "mongodb";
 
 const MONGODB_URI =
-  "mongodb+srv://Muhammad_Zain:Zain-03120014927@first-cluster.fqodd.mongodb.net/?retryWrites=true&w=majority&appName=first-cluster";
-const MONGODB_DB = "Token_Poduct_Testing";
-const COLLECTION_NAME = "Token_Poduct_Testing";
+  "mongodb+srv://admin:admin123@cluster0.cqkw3tv.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const MONGODB_DB = "Users_Stock";
+const COLLECTION_NAME = "Stock";
 
 let cachedClient = null;
 let cachedDb = null;

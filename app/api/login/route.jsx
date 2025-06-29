@@ -1,9 +1,9 @@
 import { MongoClient } from "mongodb";
 
 const MONGODB_URI =
-  "mongodb+srv://Muhammad_Zain:Zain-03120014927@first-cluster.fqodd.mongodb.net/?retryWrites=true&w=majority&appName=first-cluster";
-const MONGODB_DB = "Token_Testing";
-const COLLECTION_NAME = "Token_Testing";
+  "mongodb+srv://admin:admin123@cluster0.cqkw3tv.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const MONGODB_DB = "Login_&_SignUp";
+const COLLECTION_NAME = "User_Info";
 
 let cachedClient = null;
 let cachedDb = null;
