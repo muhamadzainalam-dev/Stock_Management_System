@@ -1,48 +1,33 @@
 import { MongoClient } from "mongodb";
 
-const MONGODB_URI =
-  "mongodb+srv://admin:admin123@cluster0.cqkw3tv.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
-const MONGODB_DB = "Login_&_SignUp";
-const COLLECTION_NAME = "User_Info";
-
-let cachedClient = null;
-let cachedDb = null;
-
-async function connectToDatabase() {
-  if (cachedClient && cachedDb) {
-    return { client: cachedClient, db: cachedDb };
-  }
-
-  const client = new MongoClient(MONGODB_URI);
-  await client.connect();
-  const db = client.db(MONGODB_DB);
-  cachedClient = client;
-  cachedDb = db;
-
-  return { client, db };
-}
+const client = new MongoClient(process.env.MONGODB_URI);
 
 export async function POST(req) {
   try {
     const { email, password } = await req.json();
 
-    const { db } = await connectToDatabase();
-    const user = await db
-      .collection(COLLECTION_NAME)
-      .findOne({ email, password });
+    await client.connect();
+    const db = client.db("login_signup");
 
-    if (user) {
-      return new Response(JSON.stringify({ token_id: user.token_id }), {
-        status: 200,
-      });
-    } else {
-      return new Response(JSON.stringify({ message: "Invalid credentials" }), {
+    const user = await db.collection("User_Info").findOne({ email });
+
+    if (!user || user.password !== password) {
+      return new Response(JSON.stringify({ error: "Invalid credentials" }), {
         status: 401,
+        headers: { "Content-Type": "application/json" },
       });
     }
+
+    return new Response(JSON.stringify({ token_id: user.token_id }), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
   } catch (error) {
-    return new Response(JSON.stringify({ message: "Server error" }), {
+    console.error(error);
+
+    return new Response(JSON.stringify({ error: "Server error" }), {
       status: 500,
+      headers: { "Content-Type": "application/json" },
     });
   }
 }

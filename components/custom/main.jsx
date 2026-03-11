@@ -194,8 +194,9 @@ export default function MainArea() {
   const fetchProducts = async () => {
     const token_id = localStorage.getItem("token_id");
     const response = await fetch(`/api/getUserProducts?token_id=${token_id}`);
-    const data = await response.json();
-    setData(data);
+    const result = await response.json();
+
+    setData(Array.isArray(result) ? result : result.products || []);
   };
 
   const handleAddProduct = async () => {
@@ -237,7 +238,7 @@ export default function MainArea() {
 
   const totalStock = data.reduce(
     (acc, product) => acc + Number(product.stock),
-    0
+    0,
   );
 
   const saveTotalCostAndStock = async (totalCost, totalStock) => {
@@ -314,7 +315,7 @@ export default function MainArea() {
                             ? null
                             : flexRender(
                                 header.column.columnDef.header,
-                                header.getContext()
+                                header.getContext(),
                               )}
                         </TableHead>
                       ))}
@@ -332,7 +333,7 @@ export default function MainArea() {
                           <TableCell key={cell.id}>
                             {flexRender(
                               cell.column.columnDef.cell,
-                              cell.getContext()
+                              cell.getContext(),
                             )}
                           </TableCell>
                         ))}

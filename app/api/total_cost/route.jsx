@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import { MongoClient } from "mongodb";
 
-const MONGODB_URI =
-  "mongodb+srv://admin:admin123@cluster0.cqkw3tv.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const MONGODB_URI = process.env.MONGODB_URI;
 const DB_NAME = "Stock";
 const COLLECTION_NAME = "Total_Cost";
 
@@ -35,14 +34,14 @@ export async function POST(request) {
     if (!totalCostandtoatlstockDoc) {
       return NextResponse.json(
         { message: "Total cost and stock saved successfully!" },
-        { status: 200 }
+        { status: 200 },
       );
     }
   } catch (error) {
     console.error("Error saving total cost and stock:");
     return NextResponse.json(
       { message: "Failed to save total cost and stock" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -2,8 +2,7 @@
 import { NextResponse } from "next/server";
 import { MongoClient } from "mongodb";
 
-const MONGODB_URI =
-  "mongodb+srv://admin:admin123@cluster0.cqkw3tv.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const MONGODB_URI = process.env.MONGODB_URI;
 const MONGODB_DB = "Users_Stock";
 const COLLECTION_NAME = "Stock";
 
@@ -40,7 +39,7 @@ export async function POST(request) {
     console.error("Error storing product:", error);
     return NextResponse.json(
       { error: "Failed to store product" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

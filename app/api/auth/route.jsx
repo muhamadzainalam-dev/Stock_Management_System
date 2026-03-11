@@ -2,8 +2,7 @@ import { NextResponse } from "next/server";
 import { MongoClient } from "mongodb";
 import { ObjectId } from "mongodb";
 
-const MONGODB_URI =
-  "mongodb+srv://admin:admin123@cluster0.cqkw3tv.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const MONGODB_URI = process.env.MONGODB_URI;
 const MONGODB_DB = "Auth";
 const COLLECTION_NAME = "UserInfo";
 
@@ -35,13 +34,13 @@ export async function POST(request) {
 
     return NextResponse.json(
       { message: "Account Succesfully Created", productId: result.insertedId },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     console.error("MongoDB Insert Error:", error);
     return NextResponse.json(
       { error: "Failed To Creat Account", details: error.message },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

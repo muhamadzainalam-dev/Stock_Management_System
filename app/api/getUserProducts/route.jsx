@@ -2,8 +2,7 @@
 import { NextResponse } from "next/server";
 import { MongoClient } from "mongodb";
 
-const MONGODB_URI =
-  "mongodb+srv://admin:admin123@cluster0.cqkw3tv.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const MONGODB_URI = process.env.MONGODB_URI;
 const MONGODB_DB = "Users_Stock";
 const COLLECTION_NAME = "Stock";
 
@@ -32,7 +31,7 @@ export async function GET(request) {
     if (!token_id) {
       return NextResponse.json(
         { error: "Token ID is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -46,7 +45,7 @@ export async function GET(request) {
     console.error("Error fetching products:", error);
     return NextResponse.json(
       { error: "Failed to fetch products" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

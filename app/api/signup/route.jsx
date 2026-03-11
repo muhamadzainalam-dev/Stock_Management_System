@@ -2,8 +2,7 @@ import { v4 as uuidv4 } from "uuid";
 import { MongoClient } from "mongodb";
 import { NextResponse } from "next/server";
 
-const MONGODB_URI =
-  "mongodb+srv://admin:admin123@cluster0.cqkw3tv.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const MONGODB_URI = process.env.MONGODB_URI;
 const MONGODB_DB = "Login_&_SignUp";
 const COLLECTION_NAME = "User_Info";
 
@@ -20,6 +19,8 @@ async function connectToDatabase() {
   const db = client.db(MONGODB_DB);
   cachedClient = client;
   cachedDb = db;
+
+  console.log("Connected TO DB");
 
   return { client, db };
 }
